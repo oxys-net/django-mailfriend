@@ -22,7 +22,7 @@ from mailfriend.models import MailedItem
 from mailfriend.forms import MailedItemForm
 
 @login_required
-def mail_item_to_friend_form(request, content_type_id, object_id, form_class=MailedItemForm):
+def display_form(request, content_type_id, object_id, form_class=MailedItemForm):
     content_type = ContentType.objects.get(pk=content_type_id)
     try:
         obj = content_type.get_object_for_this_type(pk=object_id)
@@ -39,7 +39,7 @@ def mail_item_to_friend_form(request, content_type_id, object_id, form_class=Mai
   
 
 @login_required
-def mail_item_to_friend_send(request, form_class=MailedItemForm):
+def send(request, form_class=MailedItemForm):
     if not request.POST:
         raise Http404, "Only POSTs are allowed"
     content_type = ContentType.objects.get(pk=int(request.POST['content_type_id']))
