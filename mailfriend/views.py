@@ -54,8 +54,8 @@ def send(request, form_class=MailedItemForm):
         site = Site.objects.get_current()
         site_url = 'http://%s/' % site.domain
         url_to_mail = 'http://%s%s' % (site.domain, obj_url)
-        if hasattr(settings, MAILFRIEND_SUBJECT):
-            subject = MAILFRIEND_SUBJECT % { 'user' : request.user }
+        if hasattr(settings, 'MAILFRIEND_SUBJECT'):
+            subject = settings.MAILFRIEND_SUBJECT % { 'user' : request.user }
         else:
             subject = _("You have received a link from %(user)s") % { 'user' : request.user }
         message_template = loader.get_template('mailfriend/email_message.txt')
