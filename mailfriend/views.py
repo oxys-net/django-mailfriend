@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render_to_response
 from django.http import Http404
 from django.contrib.sites.models import Site
@@ -40,13 +41,13 @@ def mail_item_to_friend_form(request, content_type_id, object_id):
 def mail_item_to_friend_send(request):
     if not request.POST:
         raise Http404, "Only POSTs are allowed"
-    content_type = ContentType.objects.get(pk=int(request.POST['content_type']))
+    content_type = ContentType.objects.get(pk=int(request.POST['content_type_id']))
     try:
-        obj = content_type.get_object_for_this_type(pk=int(request.POST['object_id']))
+        obj = content_type.get_object_for_this_type(pk=int(request.POST['object_pk']))
         obj_url = obj.get_absolute_url()
     except ObjectDoesNotExist:
         raise Http404, "The send to friend form had an invalid 'target' parameter -- the object ID was invalid"
-    mailed_item = MailedItem(date_mailed=datetime.datetime.now(), mailed_by=request.user)
+    mailed_item = MailedItem(mailed_by=request.user, content_type=content_type, object_pk=obj.pk)
     form = MailedItemForm(request.POST, instance=mailed_item)
     if form.is_valid():
         site = Site.objects.get_current()

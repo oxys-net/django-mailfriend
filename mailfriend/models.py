@@ -4,11 +4,16 @@ from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
+
 
 class MailedItem(models.Model):
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.IntegerField()
-    content_object = generic.GenericForeignKey()
+    # Content-object field
+    content_type   = models.ForeignKey(ContentType,
+            verbose_name=_('content type'),
+            related_name="content_type_set_for_%(class)s")
+    object_pk      = models.TextField(_('object ID'))
+    content_object = generic.GenericForeignKey(ct_field="content_type", fk_field="object_pk")
     mailed_by = models.ForeignKey(User)
     mailed_to = models.EmailField()
     user_email_as_from = models.BooleanField(default=False)
