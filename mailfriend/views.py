@@ -48,7 +48,7 @@ def mail_item_to_friend_send(request):
         raise Http404, "The send to friend form had an invalid 'target' parameter -- the object ID was invalid"
     mailed_item = MailedItem(date_mailed=datetime.datetime.now(), mailed_by=request.user)
     form = MailedItemForm(request.POST, instance=mailed_item)
-    if form.is_valid:
+    if form.is_valid():
         site = Site.objects.get_current()
         site_url = 'http://%s/' % site.domain
         url_to_mail = 'http://%s%s' % (site.domain, obj_url)
