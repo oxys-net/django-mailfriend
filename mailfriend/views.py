@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.template import RequestContext, loader, Context
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.utils.translation import ugettext_lazy as _
 
 # If django-mailer (http://code.google.com/p/django-mailer/) is available,
 # favor it. Otherwise, just use django.core.mail. Thanks to brosner for the
@@ -53,7 +54,10 @@ def mail_item_to_friend_send(request, form_class=MailedItemForm):
         site = Site.objects.get_current()
         site_url = 'http://%s/' % site.domain
         url_to_mail = 'http://%s%s' % (site.domain, obj_url)
-        subject = "You have received a link"
+        if hasattr(settings, MAILFRIEND_SUBJECT):
+            subject = MAILFRIEND_SUBJECT % { 'user' : request.user }
+        else:
+            subject = _("You have received a link from %(user)s") % { 'user' : request.user }
         message_template = loader.get_template('mailfriend/email_message.txt')
         message_context = Context({ 
           'site': site,

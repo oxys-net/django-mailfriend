@@ -1,11 +1,13 @@
 from django import forms
 
 from mailfriend.models import MailedItem
+from django.utils.translation import ugettext_lazy as _
 
 class MailedItemForm(forms.ModelForm):
 
-    user_email_as_from = forms.BooleanField(label="Use my e-mail address as from address", required=False)
-    send_to_user_also = forms.BooleanField(label="Send myself a copy of this e-mail", required=False)
+    mailed_to = forms.EmailField(label=_("Recipient"), required=False)
+    user_email_as_from = forms.BooleanField(label=_("Use my e-mail address as from address"), required=False)
+    send_to_user_also = forms.BooleanField(label=_("Send myself a copy of this e-mail"), required=False)
     
     def clean(self):
         dst = self.cleaned_data['mailed_to']
@@ -14,7 +16,7 @@ class MailedItemForm(forms.ModelForm):
         object_pk = self.instance.object_pk        
         
         if MailedItem.objects.filter(mailed_by=src, mailed_to=dst, object_pk=object_pk, content_type=content_type).count():
-            raise forms.ValidationError("You already sent a mail to this address about the same content!")
+            raise forms.ValidationError(_("You already sent a mail to this address about the same content!"))
 
         return self.cleaned_data
 
