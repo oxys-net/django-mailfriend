@@ -17,8 +17,8 @@ try:
 except ImportError:
     from django.core.mail import send_mail
 
-from mailfriend.models import *
-from mailfriend.forms import *
+from mailfriend.models import MailedItem
+from mailfriend.forms import MailedItemForm
 
 @login_required
 def mail_item_to_friend_form(request, content_type_id, object_id, form_class=MailedItemForm):
