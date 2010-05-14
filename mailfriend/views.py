@@ -21,14 +21,14 @@ from mailfriend.models import *
 from mailfriend.forms import *
 
 @login_required
-def mail_item_to_friend_form(request, content_type_id, object_id):
+def mail_item_to_friend_form(request, content_type_id, object_id, form_class=MailedItemForm):
     content_type = ContentType.objects.get(pk=content_type_id)
     try:
         obj = content_type.get_object_for_this_type(pk=object_id)
         obj_url = obj.get_absolute_url()
     except ObjectDoesNotExist:
         raise Http404, "Invalid -- the object ID was invalid"
-    form = MailedItemForm()
+    form = form_class()
     context = {
       'content_type': content_type,
       'form': form,
@@ -38,7 +38,7 @@ def mail_item_to_friend_form(request, content_type_id, object_id):
   
 
 @login_required
-def mail_item_to_friend_send(request):
+def mail_item_to_friend_send(request, form_class=MailedItemForm):
     if not request.POST:
         raise Http404, "Only POSTs are allowed"
     content_type = ContentType.objects.get(pk=int(request.POST['content_type_id']))
@@ -48,7 +48,7 @@ def mail_item_to_friend_send(request):
     except ObjectDoesNotExist:
         raise Http404, "The send to friend form had an invalid 'target' parameter -- the object ID was invalid"
     mailed_item = MailedItem(mailed_by=request.user, content_type=content_type, object_pk=obj.pk)
-    form = MailedItemForm(request.POST, instance=mailed_item)
+    form = form_class(request.POST, instance=mailed_item)
     if form.is_valid():
         site = Site.objects.get_current()
         site_url = 'http://%s/' % site.domain
