@@ -46,30 +46,36 @@ def mail_item_to_friend_send(request):
         obj_url = obj.get_absolute_url()
     except ObjectDoesNotExist:
         raise Http404, "The send to friend form had an invalid 'target' parameter -- the object ID was invalid"
-    site = Site.objects.get_current()
-    site_url = 'http://%s/' % site.domain
-    url_to_mail = 'http://%s%s' % (site.domain, obj_url)
-    sending_user = request.user
-    subject = "You have received a link"
-    message_template = loader.get_template('mailfriend/email_message.txt')
-    message_context = Context({ 
-      'site': site,
-      'site_url': site_url,
-      'object': obj,
-      'url_to_mail': url_to_mail,
-      'sending_user': sending_user,
-    })
-    message = message_template.render(message_context)
-    recipient_list = [request.POST['mailed_to']]
-    if request.POST.has_key('send_to_user_also'):
-        recipient_list.append(request.user.email)
-    if request.POST.has_key('user_email_as_from'):
-        from_address = request.user.email
-    else:
-        from_address = settings.DEFAULT_FROM_EMAIL
-    send_mail(subject, message, from_address, recipient_list, fail_silently=False)
-    mailed_item = MailedItem(date_mailed=datetime.datetime.now(), mailed_by=sending_user)
+    mailed_item = MailedItem(date_mailed=datetime.datetime.now(), mailed_by=request.user)
     form = MailedItemForm(request.POST, instance=mailed_item)
-    new_mailed_item = form.save()
-    context = Context({ 'object': obj })
-    return render_to_response('mailfriend/sent.html', context, context_instance=RequestContext(request))
+    if form.is_valid:
+        site = Site.objects.get_current()
+        site_url = 'http://%s/' % site.domain
+        url_to_mail = 'http://%s%s' % (site.domain, obj_url)
+        subject = "You have received a link"
+        message_template = loader.get_template('mailfriend/email_message.txt')
+        message_context = Context({ 
+          'site': site,
+          'site_url': site_url,
+          'object': obj,
+          'url_to_mail': url_to_mail,
+          'sending_user': request.user,
+        })
+        message = message_template.render(message_context)
+        recipient_list = [request.POST['mailed_to']]
+        if request.POST.has_key('send_to_user_also'):
+            recipient_list.append(request.user.email)
+        if request.POST.has_key('user_email_as_from'):
+            from_address = request.user.email
+        else:
+            from_address = settings.DEFAULT_FROM_EMAIL
+        send_mail(subject, message, from_address, recipient_list, fail_silently=False)
+        new_mailed_item = form.save()
+        template = 'mailfriend/sent.html'
+    else:
+        template = 'mailfriend/form.html'
+    return render_to_response(template, {
+                'object': obj, 
+                'form' : form, 
+                'content_type' : content_type 
+    }, context_instance=RequestContext(request))
