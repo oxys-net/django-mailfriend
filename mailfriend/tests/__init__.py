@@ -7,7 +7,6 @@ from django.test import TestCase
 from mailfriend.models import MailedItem
 
 class MailfriendTest(TestCase):
-    urls = 'mailfriend.tests.urls'
     
     def setUp(self):
         self.user = User.objects.create_user('test', 'test_user@testserver.com', 'test')
@@ -24,8 +23,8 @@ class MailfriendTest(TestCase):
     def test_anonymous_send(self):
         """Attempting to send as an anonymous user redirects to login"""
         response = self.client.post('/mailfriend/send/', {
-                        'content_type':str(self.user_ct.pk),
-                        'object_id':str(self.user.pk),
+                        'content_type_id':str(self.user_ct.pk),
+                        'object_pk':str(self.user.pk),
                         'mailed_to':'test@testserver.com',
                         'user_email_as_from':'on',
                         'send_to_user_also':'on',
@@ -38,8 +37,8 @@ class MailfriendTest(TestCase):
         """Sends an email and loads the correct page"""
         self.client.login(username='test', password='test')
         response = self.client.post('/mailfriend/send/', {
-                         'content_type':str(self.user_ct.pk),
-                         'object_id':str(self.user.pk),
+                         'content_type_id':str(self.user_ct.pk),
+                         'object_pk':str(self.user.pk),
                          'mailed_to':'test@testserver.com',
                          'user_email_as_from':'on',
                          'send_to_user_also':'on',
