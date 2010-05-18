@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-05-14 18:37+0200\n"
-"PO-Revision-Date: 2010-05-14 18:37+0100\n"
+"PO-Revision-Date: 2010-05-18 13:47+0100\n"
 "Last-Translator: Mathieu Pillard <m.pillard@liberation.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #: forms.py:8
 msgid "Recipient"
-msgstr ""
+msgstr "Destinataire"
 
 #: forms.py:9
 msgid "Use my e-mail address as from address"
