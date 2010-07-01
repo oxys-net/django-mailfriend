@@ -1,6 +1,6 @@
 Hi!
 
-Your friend {% firstof sending_user.get_full_name sending_user.username %} has sent you an item from {{ site.name }}. The item {% firstof sending_user.get_full_name sending_user.username %} would like you to see is entitled {% firstof object.title object.name object %}. You can view it using the following link:
+Your friend {{ mailed_by_name }} has sent you an item from {{ site.name }}. The item {{ mailed_by_name }} would like you to see is entitled {% firstof object.title object.name object %}. You can view it using the following link:
 
 {{ url_to_mail }}
 

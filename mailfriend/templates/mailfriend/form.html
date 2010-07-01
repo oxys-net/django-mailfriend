@@ -9,14 +9,6 @@
         <input type="hidden" id="id_content_type" name="content_type_id" value="{{ content_type.pk }}">
         <input type="hidden" id="id_object_pk" name="object_pk" value="{{ object.pk }}">
         <input type="submit" value="submit" />
-    </p>
-    <!--
-    <input type="hidden" id="id_content_type" name="content_type" value="{{ content_type.pk }}">
-    <input type="hidden" id="id_object_id" name="object_id" value="{{ object.pk }}">
-    <label for="id_mailed_to">Mail to:</label> {{ form.mailed_to }}
-    <label for="id_user_email_as_from">Use my e-mail address as from address:</label> {{ form.user_email_as_from }}
-    <label for="id_send_to_user_also">Send myself a copy of this e-mail:</label> {{ form.send_to_user_also }}
-    -->
-    
+    </p>    
   </form>
 {% endblock %}

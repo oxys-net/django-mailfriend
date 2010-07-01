@@ -21,7 +21,8 @@ except ImportError:
 from mailfriend.models import MailedItem
 from mailfriend.forms import MailedItemForm
 
-@login_required
+require_login = getattr(settings, "MAILFRIEND_REQUIRE_LOGIN", True)
+
 def display_form(request, content_type_id, object_id, form_class=MailedItemForm):
     content_type = ContentType.objects.get(pk=content_type_id)
     try:
@@ -29,16 +30,16 @@ def display_form(request, content_type_id, object_id, form_class=MailedItemForm)
         obj_url = obj.get_absolute_url()
     except ObjectDoesNotExist:
         raise Http404, "Invalid -- the object ID was invalid"
-    form = form_class()
+    form = form_class(user=request.user)
     context = {
       'content_type': content_type,
       'form': form,
       'object': obj,
     }
     return render_to_response('mailfriend/form.html', context, context_instance=RequestContext(request))
-  
+if require_login:
+    display_form = login_required(display_form)
 
-@login_required
 def send(request, form_class=MailedItemForm):
     if not request.POST:
         raise Http404, "Only POSTs are allowed"
@@ -48,7 +49,8 @@ def send(request, form_class=MailedItemForm):
         obj_url = obj.get_absolute_url()
     except ObjectDoesNotExist:
         raise Http404, "The send to friend form had an invalid 'target' parameter -- the object ID was invalid"
-    mailed_item = MailedItem(mailed_by=request.user, content_type=content_type, object_pk=obj.pk)
+    user = request.user.is_authenticated() and request.user or None
+    mailed_item = MailedItem(mailed_by=user, content_type=content_type, object_pk=obj.pk)
     form = form_class(request.POST, instance=mailed_item)
     if form.is_valid():
         site = Site.objects.get_current()
@@ -64,7 +66,7 @@ def send(request, form_class=MailedItemForm):
           'site_url': site_url,
           'object': obj,
           'url_to_mail': url_to_mail,
-          'sending_user': request.user,
+          'mailed_by_name': form.cleaned_data['mailed_by_name']
         })
         message = message_template.render(message_context)
         recipient_list = [request.POST['mailed_to']]
@@ -84,3 +86,5 @@ def send(request, form_class=MailedItemForm):
                 'form' : form, 
                 'content_type' : content_type 
     }, context_instance=RequestContext(request))
+if require_login:
+    send = login_required(send)
