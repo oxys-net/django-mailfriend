@@ -70,10 +70,11 @@ def send(request, form_class=MailedItemForm):
         })
         message = message_template.render(message_context)
         recipient_list = [request.POST['mailed_to']]
+        mailed_by_email = form.cleaned_data['mailed_by_email']
         if request.POST.has_key('send_to_user_also'):
-            recipient_list.append(request.user.email)
+            recipient_list.append(mailed_by_email)
         if request.POST.has_key('user_email_as_from'):
-            from_address = request.user.email
+            from_address = mailed_by_email
         else:
             from_address = settings.DEFAULT_FROM_EMAIL
         send_mail(subject, message, from_address, recipient_list, fail_silently=False)
