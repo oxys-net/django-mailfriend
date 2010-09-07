@@ -6,8 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 class MailedItemForm(forms.ModelForm):
 
     mailed_by_name = forms.CharField(label=_("Your name"), required=True)
-    mailed_by_email = forms.EmailField(label="Your E-mail")
-    mailed_to = forms.EmailField(label="Recipient's E-mail")
+    mailed_by_email = forms.EmailField(label=_("Your E-mail"))
+    mailed_to = forms.EmailField(label=_("Recipient's E-mail"))
     user_email_as_from = forms.BooleanField(label=_("Use my e-mail address as from address"), required=False)
     send_to_user_also = forms.BooleanField(label=_("Send myself a copy of this e-mail"), required=False)
     error_css_class = "field-error"

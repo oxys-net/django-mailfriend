@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-14 18:37+0200\n"
-"PO-Revision-Date: 2010-05-18 13:47+0100\n"
+"POT-Creation-Date: 2010-09-07 18:20+0200\n"
+"PO-Revision-Date: 2010-09-07 18:22+0100\n"
 "Last-Translator: Mathieu Pillard <m.pillard@liberation.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,31 +17,52 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
 #: forms.py:8
-msgid "Recipient"
-msgstr "Destinataire"
+msgid "Your name"
+msgstr "Votre nom"
 
 #: forms.py:9
+msgid "Your E-mail"
+msgstr "Votre e-mail"
+
+#: forms.py:10
+msgid "Recipient's E-mail"
+msgstr "Destinataire"
+
+#: forms.py:11
 msgid "Use my e-mail address as from address"
 msgstr "Utiliser mon adresse e-mail comme adresse d'envoi"
 
-#: forms.py:10
+#: forms.py:12
 msgid "Send myself a copy of this e-mail"
 msgstr "M'envoyer une copie de cet e-mail"
 
-#: forms.py:19
+#: forms.py:46
 msgid "You already sent a mail to this address about the same content!"
 msgstr "Vous avez déjà envoyé un e-mail à cette adresse à propos du même contenu!"
 
 #: models.py:13
 msgid "content type"
-msgstr ""
+msgstr "content type"
 
 #: models.py:15
 msgid "object ID"
-msgstr ""
+msgstr "object ID"
 
-#: views.py:60
+#: views.py:62
 #, python-format
 msgid "You have received a link from %(user)s"
 msgstr "Vous avez reçu un lien de %(user)s"
+
+#: templates/mailfriend/form.html:5
+msgid "E-mail to a friend"
+msgstr "Envoyer à un ami"
+
+#: templates/mailfriend/form.html:7
+#, python-format
+msgid "To e-mail <a href=\"%(object_url)s\">%(object)s</a> to a friend, fill out the short form below."
+msgstr "Pour envoyer <a href=\"%(object_url)s\">%(object)s</a> à un ami, remplissez le formulaire ci-dessous"
+
+#: templates/mailfriend/form.html:10
+msgid "Note that if you select \"Use my e-mail address as from address\", your e-mail address will be visible to your friend, and they will be able to reply to you. If you do not select this box, your friend will receive an e-mail from an address that does not accept replies and they will <em>not</em> be able to see your e-mail address. "
+msgstr "Si vous sélectionnez \"Utiliser mon adresse e-mail comme adresse d'envoi\" votre adresse e-mail sera visible par votre ami, et il pourra vous répondre. Si vous ne cochez pas cette case, votre ami recevra un e-mail depuis une adresse n'acceptant pas de réponses et il ne sera <em>pas</em> capable de voir votre adresse e-mail."
 
