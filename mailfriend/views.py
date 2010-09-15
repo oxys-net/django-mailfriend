@@ -56,17 +56,18 @@ def send(request, form_class=MailedItemForm):
         site = Site.objects.get_current()
         site_url = 'http://%s/' % site.domain
         url_to_mail = 'http://%s%s' % (site.domain, obj_url)
+        mailed_by = form.cleaned_data['mailed_by_name']
         if hasattr(settings, 'MAILFRIEND_SUBJECT'):
-            subject = settings.MAILFRIEND_SUBJECT % { 'user' : request.user }
+            subject = settings.MAILFRIEND_SUBJECT % { 'user' : mailed_by }
         else:
-            subject = _("You have received a link from %(user)s") % { 'user' : request.user }
+            subject = _("You have received a link from %(user)s") % { 'user' : mailed_by }
         message_template = loader.get_template('mailfriend/email_message.txt')
         message_context = Context({ 
           'site': site,
           'site_url': site_url,
           'object': obj,
           'url_to_mail': url_to_mail,
-          'mailed_by_name': form.cleaned_data['mailed_by_name']
+          'mailed_by_name': mailed_by
         })
         message = message_template.render(message_context)
         recipient_list = [request.POST['mailed_to']]
