@@ -22,4 +22,4 @@ class MailedItem(models.Model):
     date_mailed = models.DateTimeField(default=datetime.datetime.now, editable=False)
 
     def __unicode__(self):
-        return "%s: To %s, from %s" % (unicode(self.content_object), self.mailed_to, unicode(self.mailed_by))
+        return "%s: To %s, from %s" % (unicode(self.content_object), self.mailed_to, unicode(self.mailed_by or self.mailed_by_email))
