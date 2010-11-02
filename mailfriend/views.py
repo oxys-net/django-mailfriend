@@ -23,6 +23,10 @@ from mailfriend.forms import MailedItemForm
 
 require_login = getattr(settings, "MAILFRIEND_REQUIRE_LOGIN", True)
 
+def _get_templates(obj, name):
+    prefix = obj.__class__.__name__.lower()
+    return ('mailfriend/%s_%s.html' % (prefix, name), 'mailfriend/%s.html' % (name, ))
+
 def display_form(request, content_type_id, object_id, form_class=MailedItemForm):
     content_type = ContentType.objects.get(pk=content_type_id)
     try:
@@ -36,7 +40,7 @@ def display_form(request, content_type_id, object_id, form_class=MailedItemForm)
       'form': form,
       'object': obj,
     }
-    return render_to_response('mailfriend/form.html', context, context_instance=RequestContext(request))
+    return render_to_response(_get_templates(obj, "form"), context, context_instance=RequestContext(request))
 if require_login:
     display_form = login_required(display_form)
 
@@ -80,10 +84,10 @@ def send(request, form_class=MailedItemForm):
             from_address = settings.DEFAULT_FROM_EMAIL
         send_mail(subject, message, from_address, recipient_list, fail_silently=False)
         new_mailed_item = form.save()
-        template = 'mailfriend/sent.html'
+        templates = _get_templates(obj, "sent")
     else:
-        template = 'mailfriend/form.html'
-    return render_to_response(template, {
+        templates = _get_templates(obj, "form")
+    return render_to_response(templates, {
                 'object': obj, 
                 'form' : form, 
                 'content_type' : content_type 
