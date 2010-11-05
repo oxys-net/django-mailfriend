@@ -25,7 +25,7 @@ require_login = getattr(settings, "MAILFRIEND_REQUIRE_LOGIN", True)
 
 def _get_templates(obj, name):
     prefix = obj.__class__.__name__.lower()
-    return ('mailfriend/%s_%s.html' % (prefix, name), 'mailfriend/%s.html' % (name, ))
+    return ('mailfriend/%s_%s' % (prefix, name), 'mailfriend/%s' % (name, ))
 
 def display_form(request, content_type_id, object_id, form_class=MailedItemForm):
     content_type = ContentType.objects.get(pk=content_type_id)
@@ -40,7 +40,7 @@ def display_form(request, content_type_id, object_id, form_class=MailedItemForm)
       'form': form,
       'object': obj,
     }
-    return render_to_response(_get_templates(obj, "form"), context, context_instance=RequestContext(request))
+    return render_to_response(_get_templates(obj, "form.html"), context, context_instance=RequestContext(request))
 if require_login:
     display_form = login_required(display_form)
 
@@ -65,15 +65,13 @@ def send(request, form_class=MailedItemForm):
             subject = settings.MAILFRIEND_SUBJECT % { 'user' : mailed_by }
         else:
             subject = _("You have received a link from %(user)s") % { 'user' : mailed_by }
-        message_template = loader.get_template('mailfriend/email_message.txt')
-        message_context = Context({ 
-          'site': site,
-          'site_url': site_url,
-          'object': obj,
-          'url_to_mail': url_to_mail,
-          'mailed_by_name': mailed_by
+        message = loader.render_to_string(_get_templates(obj, "email_message.txt"), {
+            'site': site,
+            'site_url': site_url,
+            'object': obj,
+            'url_to_mail': url_to_mail,
+            'mailed_by_name': mailed_by
         })
-        message = message_template.render(message_context)
         recipient_list = [request.POST['mailed_to']]
         mailed_by_email = form.cleaned_data['mailed_by_email']
         if request.POST.has_key('send_to_user_also'):
@@ -84,9 +82,9 @@ def send(request, form_class=MailedItemForm):
             from_address = settings.DEFAULT_FROM_EMAIL
         send_mail(subject, message, from_address, recipient_list, fail_silently=False)
         new_mailed_item = form.save()
-        templates = _get_templates(obj, "sent")
+        templates = _get_templates(obj, "sent.html")
     else:
-        templates = _get_templates(obj, "form")
+        templates = _get_templates(obj, "form.html")
     return render_to_response(templates, {
                 'object': obj, 
                 'form' : form, 
