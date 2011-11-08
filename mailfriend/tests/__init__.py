@@ -1,3 +1,9 @@
+from django.db import models
+
+class DummyModel(models.Model):
+    pass
+
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -5,6 +11,9 @@ from django.core import mail
 from django.test import TestCase
 
 from mailfriend.models import MailedItem
+
+from test_commend_delete_old_maileditems import *
+
 
 class MailfriendTest(TestCase):
     
