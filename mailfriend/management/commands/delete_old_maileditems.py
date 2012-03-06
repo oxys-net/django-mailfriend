@@ -18,7 +18,7 @@ class Command(BaseCommand):
             action='store_true',
             dest='dryrun',
             default=False,
-            help='Report what will be deleted without actually doing it'),
+            help='Count the number of elements that would be deleted, without actually doing it'),
         )
 
     def handle(self, *args, **options):
@@ -29,10 +29,7 @@ class Command(BaseCommand):
         query = MailedItem.objects.filter(date_mailed__lte=limit)
 
         if dryrun:
-            output = ''
-            for mailed_item in query:
-                print '%s pk=%s\n' % (mailed_item, mailed_item.pk)
             count = query.count()
-            print 'Total count of item to be deleted %s' % count
+            print 'Total count of items to be deleted: %d' % count
         else:
             query.delete()
