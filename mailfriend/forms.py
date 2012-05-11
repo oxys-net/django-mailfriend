@@ -11,6 +11,7 @@ class MailedItemForm(forms.ModelForm):
     user_email_as_from = forms.BooleanField(label=_("Use my e-mail address as from address"), required=False)
     send_to_user_also = forms.BooleanField(label=_("Send myself a copy of this e-mail"), required=False)
     error_css_class = "field-error"
+    required_css_class = 'required'
     
     def __init__(self, *args, **kwargs):
         if 'user' in kwargs:
