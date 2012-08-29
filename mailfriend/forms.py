@@ -2,9 +2,10 @@ from django import forms
 
 from mailfriend.models import MailedItem
 from django.utils.translation import ugettext_lazy as _
+from captcha.fields import ReCaptchaField
 
 class MailedItemForm(forms.ModelForm):
-
+    
     mailed_by_name = forms.CharField(label=_("Your name"), required=True)
     mailed_by_email = forms.EmailField(label=_("Your E-mail"))
     mailed_to = forms.EmailField(label=_("Recipient's E-mail"))
@@ -12,6 +13,8 @@ class MailedItemForm(forms.ModelForm):
     send_to_user_also = forms.BooleanField(label=_("Send myself a copy of this e-mail"), required=False)
     error_css_class = "field-error"
     required_css_class = 'required'
+    
+    captcha = ReCaptchaField(attrs={'theme' : 'clean',  'lang' : 'fr'})
     
     def __init__(self, *args, **kwargs):
         if 'user' in kwargs:
@@ -33,7 +36,8 @@ class MailedItemForm(forms.ModelForm):
             'mailed_by_email',
             'mailed_to',
             'user_email_as_from',
-            'send_to_user_also'
+            'send_to_user_also',
+            'captcha'
         ]
     
     def clean(self):
