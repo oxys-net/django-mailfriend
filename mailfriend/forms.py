@@ -43,8 +43,8 @@ class MailedItemForm(forms.ModelForm):
             content_type = self.instance.content_type
             object_pk = self.instance.object_pk
             
-            if MailedItem.objects.filter(mailed_by_email=src, mailed_to=dst, object_pk=object_pk, content_type=content_type).count():
-                raise forms.ValidationError(_("You already sent a mail to this address about the same content!"))
+            #if MailedItem.objects.filter(mailed_by_email=src, mailed_to=dst, object_pk=object_pk, content_type=content_type).count():
+            #    raise forms.ValidationError(_("You already sent a mail to this address about the same content!"))
 
         return self.cleaned_data
 
