@@ -2,7 +2,11 @@ from django import forms
 
 from mailfriend.models import MailedItem
 from django.utils.translation import ugettext_lazy as _
-from captcha.fields import ReCaptchaField
+from django.conf import settings
+
+use_captcha = 'captcha' in settings.INSTALLED_APPS
+if use_captcha:
+    from captcha.fields import ReCaptchaField
 
 class MailedItemForm(forms.ModelForm):
     
@@ -14,7 +18,8 @@ class MailedItemForm(forms.ModelForm):
     error_css_class = "field-error"
     required_css_class = 'required'
     
-    captcha = ReCaptchaField(attrs={'theme' : 'clean',  'lang' : 'fr'})
+    if use_captcha:
+        captcha = ReCaptchaField(attrs={'theme' : 'clean',  'lang' : 'fr'})
     
     def __init__(self, *args, **kwargs):
         if 'user' in kwargs:
@@ -37,8 +42,11 @@ class MailedItemForm(forms.ModelForm):
             'mailed_to',
             'user_email_as_from',
             'send_to_user_also',
-            'captcha'
+            
         ]
+        
+        if use_captcha:
+            self.fields.keyOrder.append('captcha')
     
     def clean(self):
         if 'mailed_to' in self.cleaned_data and 'mailed_by_email' in self.cleaned_data:
