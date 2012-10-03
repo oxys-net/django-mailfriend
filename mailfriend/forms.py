@@ -14,7 +14,7 @@ class MailedItemForm(forms.ModelForm):
     error_css_class = "field-error"
     required_css_class = 'required'
     
-    captcha = ReCaptchaField(attrs={'theme' : 'clean',  'lang' : 'fr'})
+    recaptcha_response_field = ReCaptchaField(attrs={'theme' : 'clean',  'lang' : 'fr'})
     
     def __init__(self, *args, **kwargs):
         if 'user' in kwargs:
@@ -37,7 +37,7 @@ class MailedItemForm(forms.ModelForm):
             'mailed_to',
             'user_email_as_from',
             'send_to_user_also',
-            'captcha'
+            'recaptcha_response_field'
         ]
     
     def clean(self):
