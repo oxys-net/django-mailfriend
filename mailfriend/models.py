@@ -3,9 +3,8 @@ import datetime
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-
+from django.conf import settings
 
 class MailedItem(models.Model):
     # Content-object field
@@ -14,7 +13,7 @@ class MailedItem(models.Model):
             related_name="content_type_set_for_%(class)s")
     object_pk      = models.TextField(_('object ID'))
     content_object = generic.GenericForeignKey(ct_field="content_type", fk_field="object_pk")
-    mailed_by = models.ForeignKey(User, blank=True, null=True)
+    mailed_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     mailed_by_email = models.EmailField("Sender's E-mail")
     mailed_to = models.EmailField("Recipient's E-mail")
     user_email_as_from = models.BooleanField(default=False)
